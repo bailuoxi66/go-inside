@@ -46,6 +46,7 @@ func (c *Connection) Start() {
 	fmt.Println("Conn Start()...ConnID:", c.ConnID)
 
 	// 启动从当前链接的读数据的业务
+	go c.StartReader()
 	// TODO 启动从写前链接的读数据的业务
 }
 
