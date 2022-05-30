@@ -26,12 +26,10 @@ type GlobalObj struct {
 	MaxPackageSize int    //当前zinx框架数据包的最大值
 }
 
-// 定义一个全局的对外Globalobj
+// GlobalObject 定义一个全局的对外Globalobj
 var GlobalObject *GlobalObj
 
-/*
-	从zinx.json去加载用于自定义的参数
-*/
+// Reload 从zinx.json去加载用于自定义的参数
 func (g *GlobalObj) Reload() {
 	data, err := ioutil.ReadFile("conf/zinx.json")
 	if err != nil {

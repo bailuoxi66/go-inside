@@ -2,6 +2,7 @@ package znet
 
 import (
 	"fmt"
+	"github.com/bailuoxi66/go-inside/demo-zinx/utils"
 	"github.com/bailuoxi66/go-inside/demo-zinx/ziface"
 	"net"
 )
@@ -23,7 +24,10 @@ type Server struct {
 // Start 启动服务器
 func (s *Server) Start() {
 
-	fmt.Printf("[Start] Server Listener at IP:%s, Port:%d  is starting\n", s.IP, s.Port)
+	fmt.Printf("[Zinx] Server Name:%s, listenner at IP:%s, Port:%d is starting...",
+		utils.GlobalObject.Name, utils.GlobalObject.Host, utils.GlobalObject.TcpPort)
+	fmt.Printf("[Zinx] Version:%s, MaxConn:%d, MaxPacketSize:%d\n",
+		utils.GlobalObject.Version, utils.GlobalObject.MaxConn, utils.GlobalObject.MaxPackageSize)
 
 	// 为了不让Start阻塞在Accept
 	go func() {
@@ -84,10 +88,10 @@ func (s *Server) AddRouter(router ziface.IRouter) {
 
 func NewServer(name string) ziface.IServer {
 	s := &Server{
-		Name:      name,
+		Name:      utils.GlobalObject.Name,
 		IPVersion: "tcp4",
-		IP:        "0.0.0.0",
-		Port:      8999,
+		IP:        utils.GlobalObject.Host,
+		Port:      utils.GlobalObject.TcpPort,
 		Router:    nil,
 	}
 	return s
