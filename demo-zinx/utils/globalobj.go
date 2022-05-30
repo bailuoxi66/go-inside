@@ -23,7 +23,7 @@ type GlobalObj struct {
 	*/
 	Version        string // 当前Zinx的版本号
 	MaxConn        int    //当前服务器主机允许的最大链接数
-	MaxPackageSize int    //当前zinx框架数据包的最大值
+	MaxPackageSize uint32 //当前zinx框架数据包的最大值
 }
 
 // GlobalObject 定义一个全局的对外Globalobj
