@@ -13,9 +13,10 @@ type IConnection interface {
 	GetTCPConnection() *net.TCPConn
 	// RemoteAddr 获取当前链接模块的链接ID
 	RemoteAddr() net.Addr
+	// GetConnID 获取当前链接模块的链接ID
 	GetConnID() uint32
-	// Send 获取远程客户端的TCP状态 IP Port
-	Send(data []byte) error
+	// SendMsg 将数据发送给远程的客户端
+	SendMsg(msgId uint32, data []byte) error
 }
 
 // HandleFunc 定义一个处理链接业务的方法
