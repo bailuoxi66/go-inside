@@ -14,7 +14,7 @@ func (r *Request) GetConnection() ziface.IConnection {
 	return r.conn
 }
 
-// 得到请求的数据消息
+// GetData 得到请求的数据消息
 func (r *Request) GetData() []byte {
 	return r.message.GetData()
 }
