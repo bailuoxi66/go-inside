@@ -22,7 +22,7 @@ func NewMsgHandle() *MsgHandle {
 	return &MsgHandle{
 		Apis:           make(map[uint32]ziface.IRouter),
 		WorkerPollSize: utils.GlobalObject.WorkerPoolSize,
-		TaskQueue:      make([]chan ziface.IRequest, utils.GlobalObject.MaxWorkerTaskLen),
+		TaskQueue:      make([]chan ziface.IRequest, utils.GlobalObject.MaxPackageSize),
 	}
 }
 
@@ -47,4 +47,30 @@ func (mh *MsgHandle) AddRouter(msgID uint32, router ziface.IRouter) {
 	// 2. 添加msg与API的绑定关系
 	mh.Apis[msgID] = router
 	fmt.Println("Add api MsgID:", msgID, " Success!")
+}
+
+// StartWorkerPool 启动一个Worker工作池（开启工作池的动作只能发生一次，一个zinx框架只能有一个worker工作池）
+func (mh *MsgHandle) StartWorkerPool() {
+	// 根据workerPoolSize分别开启Worker，每个worker用一个go来承载
+	for i := 0; i < int(mh.WorkerPollSize); i++ {
+		// 一个worker被启动
+		// 1. 当前worker对应的channel消息队列 开辟空间 第0个worker 就用第0个channel
+		mh.TaskQueue[i] = make(chan ziface.IRequest, utils.GlobalObject.MaxWorkerTaskLen)
+		// 2. 启动当前的worker，阻塞等待消息从channel传递进来
+		go mh.StartOneWorker(i, mh.TaskQueue[i])
+	}
+}
+
+// StartOneWorker 启动一个Worker工作流程
+func (mh *MsgHandle) StartOneWorker(workerID int, taskQueue chan ziface.IRequest) {
+	fmt.Println("Worker ID：", workerID, " is started...")
+
+	// 不断的阻塞等待对应消息队列的消息
+	for {
+		select {
+		// 如果有消息过来，出列的就是一个客户端的Request，执行当前Request所绑定的业务
+		case request := <-taskQueue:
+			mh.DoMsgHandler(request)
+		}
+	}
 }

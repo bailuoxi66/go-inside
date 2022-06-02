@@ -54,8 +54,8 @@ func init() {
 		Host:             "0.0.0.0",
 		MaxConn:          1000,
 		MaxPackageSize:   4096,
-		WorkerPoolSize:   10,
-		MaxWorkerTaskLen: 1024,
+		WorkerPoolSize:   10,   // Worker工作池的队列的个数
+		MaxWorkerTaskLen: 1024, // 每个worker对应的消息队列的任务的数量最大值
 	}
 
 	GlobalObject.Reload()
