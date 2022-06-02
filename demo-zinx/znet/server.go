@@ -48,6 +48,8 @@ func (s *Server) Start() {
 		cid = 0
 		// 3. 阻塞的等待客户端链接，处理客户端链接业务（读写）
 		for {
+			// 开启消息队列及worker工作池
+			s.MsgHandle.StartWorkerPool()
 			// 如果有客户端链接过来，阻塞会返回
 			conn, err := listenner.AcceptTCP()
 			if err != nil {
