@@ -19,10 +19,11 @@ type MsgHandle struct {
 
 // NewMsgHandle 初始化创建MsgHandle方法
 func NewMsgHandle() *MsgHandle {
+	fmt.Println("MaxPackageSize:", utils.GlobalObject.MaxPackageSize)
 	return &MsgHandle{
 		Apis:           make(map[uint32]ziface.IRouter),
 		WorkerPollSize: utils.GlobalObject.WorkerPoolSize,
-		TaskQueue:      make([]chan ziface.IRequest, utils.GlobalObject.MaxPackageSize),
+		TaskQueue:      make([]chan ziface.IRequest, utils.GlobalObject.WorkerPoolSize),
 	}
 }
 
