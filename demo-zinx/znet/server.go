@@ -62,6 +62,7 @@ func (s *Server) Start() {
 			// 设置最大链接个数的判断，如果超过最大链接，则关闭此新的链接
 			if s.ConMgr.Len() >= utils.GlobalObject.MaxConn {
 				// TODO 给客户端相应一个超出最大链接的错误包
+				fmt.Println("Too Many Connections MaxConn="utils.GlobalObject.MaxConn)
 				conn.Close()
 				continue
 			}
@@ -97,6 +98,10 @@ func (s *Server) Server() {
 func (s *Server) AddRouter(msgID uint32, router ziface.IRouter) {
 	s.MsgHandle.AddRouter(msgID, router)
 	fmt.Println("AddRouter Success!...")
+}
+
+func (s *Server) GetConnMgr() ziface.IConnManager {
+	return s.ConMgr
 }
 
 func NewServer(name string) ziface.IServer {
