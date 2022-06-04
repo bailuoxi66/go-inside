@@ -1,0 +1,9 @@
+{
+  "Name": "zinx v0.9 demoServerApp",
+  "Host": "127.0.0.1",
+  "Version": "0.9",
+  "TcpPort": 8999,
+  "MaxConn": 3,
+  "MaxPackageSize": 4096,
+  "WorkerPoolSize": 10
+}

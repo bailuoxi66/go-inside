@@ -21,6 +21,10 @@ type Server struct {
 	MsgHandle ziface.IMsgHandler
 	// 该server的链接管理器
 	ConMgr ziface.IConnManager
+	// 该server创建链接之后自动调用Hook函数
+	OnConnStart func(conn ziface.IConnection)
+	// 该server销毁链接之前自动调用Hook函数
+	OnConnStop func(conn ziface.IConnection)
 }
 
 // Start 启动服务器
@@ -62,12 +66,12 @@ func (s *Server) Start() {
 			// 设置最大链接个数的判断，如果超过最大链接，则关闭此新的链接
 			if s.ConMgr.Len() >= utils.GlobalObject.MaxConn {
 				// TODO 给客户端相应一个超出最大链接的错误包
-				fmt.Println("Too Many Connections MaxConn="utils.GlobalObject.MaxConn)
+				fmt.Println("Too Many Connections MaxConn=", utils.GlobalObject.MaxConn)
 				conn.Close()
 				continue
 			}
 			// 将处理新链接的业务方法和conn 进行绑定 得到我们的链接模块
-			dealConn := NewConnection(conn, cid, s.MsgHandle)
+			dealConn := NewConnection(s, conn, cid, s.MsgHandle)
 			cid++
 
 			// 启动当前的链接业务处理
@@ -114,4 +118,30 @@ func NewServer(name string) ziface.IServer {
 		ConMgr:    NewConnManager(),
 	}
 	return s
+}
+
+// SetOnConnStart 注册OnConnStart 钩子函数的方法
+func (s *Server) SetOnConnStart(hookFunc func(connection ziface.IConnection)) {
+	s.OnConnStart = hookFunc
+}
+
+// SetOnConnStop 注册OnConnStop 钩子函数的方法
+func (s *Server) SetOnConnStop(hookFunc func(connection ziface.IConnection)) {
+	s.OnConnStop = hookFunc
+}
+
+// CallOnConnStart 调用OnConnStart 钩子函数的方法
+func (s *Server) CallOnConnStart(conn ziface.IConnection) {
+	if s.OnConnStart != nil {
+		fmt.Println("--------------> Call OnConnStart()...")
+		s.OnConnStart(conn)
+	}
+}
+
+// CallOnConnStop 调用OnConnStop 钩子函数的方法
+func (s *Server) CallOnConnStop(conn ziface.IConnection) {
+	if s.OnConnStop != nil {
+		fmt.Println("--------------> Call OnConnStop()...")
+		s.OnConnStop(conn)
+	}
 }
