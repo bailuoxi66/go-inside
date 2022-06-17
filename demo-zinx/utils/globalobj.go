@@ -47,7 +47,7 @@ func (g *GlobalObj) Reload() {
 
 // 提供一个init方法，初始化当前的GlobalObject
 func init() {
-	GlobalObject := &GlobalObj{
+	GlobalObject = &GlobalObj{
 		Name:             "ZinxServerApp",
 		Version:          "V0.9",
 		TcpPort:          8999,
