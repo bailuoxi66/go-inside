@@ -52,7 +52,7 @@ func (g *Grid) Remove(playerID int) {
 }
 
 // GetPlayerIDs 得到当前格子中所有玩家ID
-func (g *Grid) GetPlayerIDs(playerIDs []int) {
+func (g *Grid) GetPlayerIDs() (playerIDs []int) {
 	g.pIDLock.RLock()
 	defer g.pIDLock.RUnlock()
 
