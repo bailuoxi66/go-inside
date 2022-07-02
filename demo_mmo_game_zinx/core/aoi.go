@@ -122,7 +122,7 @@ func (m *AOIManager) GetGidByPos(x, y float32) int {
 	return idy*m.CntsX + idx
 }
 
-// x、y横纵坐标得到周边九宫格全部的PlayerIDs
+// GetPidsByPos x、y横纵坐标得到周边九宫格全部的PlayerIDs
 func (m *AOIManager) GetPidsByPos(x, y float32) (playerIDs []int) {
 	//得到当前玩家GID格子id
 	gID := m.GetGidByPos(x, y)
