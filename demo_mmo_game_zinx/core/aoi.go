@@ -27,7 +27,7 @@ func NewAOIManager(minX, maxX, cntsX, minY, maxY, cntsY int) *AOIManager {
 		MaxX:  maxX,
 		CntsX: cntsX,
 		MinY:  minY,
-		MaxY:  maxX,
+		MaxY:  maxY,
 		CntsY: cntsY,
 		grids: make(map[int]*Grid),
 	}
@@ -63,7 +63,7 @@ func (m *AOIManager) gridLength() int {
 func (m *AOIManager) String() string {
 	//打印AOIManager信息
 	s := fmt.Sprintf("AOIManager:\nMinX:%d, MaxX:%d, cntsX:%d, MinY:%d, MaxY:%d, cntsY:%d\ngrids:",
-		m.MinX, m.MinX, m.CntsX, m.MinY, m.MaxY, m.CntsY)
+		m.MinX, m.MaxX, m.CntsX, m.MinY, m.MaxY, m.CntsY)
 
 	//打印全部格子信息
 	for _, grid := range m.grids {
