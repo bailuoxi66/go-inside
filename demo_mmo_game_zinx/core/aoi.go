@@ -72,3 +72,44 @@ func (m *AOIManager) String() string {
 
 	return s
 }
+
+// GetSurroundGridsByGid 根据GID得到周边九宫格格子集合
+func (m *AOIManager) GetSurroundGridsByGid(gID int) (grids []*Grid) {
+	// 判断gID是否在AOIManager中
+	if _, ok := m.grids[gID]; !ok {
+		return
+	}
+
+	// 将当前gid本身加入到九宫格切片中
+	grids = append(grids, m.grids[gID])
+
+	// 判断当前gID左边或者右边是否还有格子？
+	idx := gID % m.CntsX
+	if idx > 0 {
+		grids = append(grids, m.grids[gID-1])
+	}
+	if idx < m.CntsX-1 {
+		grids = append(grids, m.grids[gID+1])
+	}
+
+	// 将x轴当前的格子都取出，进行遍历
+	gidsX := make([]int, 0, len(grids))
+	for _, v := range grids {
+		gidsX = append(gidsX, v.GID)
+	}
+
+	for _, v := range gidsX {
+		// 得到当前格子id的y轴编号
+		idy := v / m.CntsX
+		// 是否上面还有格子
+		if idy > 0 {
+			grids = append(grids, m.grids[v-m.CntsX])
+		}
+		// 是否下面还有格子
+		if idy < m.CntsY-1 {
+			grids = append(grids, m.grids[v+m.CntsX])
+		}
+	}
+
+	return grids
+}
