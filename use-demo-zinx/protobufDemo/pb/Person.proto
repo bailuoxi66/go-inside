@@ -1,0 +1,27 @@
+syntax = "proto3"; // 指定版本信息，不指定会报错
+
+// 新版的proto编译器都要求文件中标注编译后文件的存储位置
+// 即生成的.pb.go文件会存放在../pb中，并和该文件名保持一致
+// test.proto => test.pb.go
+option go_package = "../pb";
+
+// message为关键字，作用为定义一种消息类型. 其中1，2，3，4代表后续序列化时候的顺序
+message Person{
+  string name = 1; // 姓名
+  int32 age = 2; // 年龄
+  repeated string emails = 3; // 电子邮件（repeated表示字段允许重复，在Go中对应slice）
+  repeated PhoneNumber phones = 4; // 手机号
+}
+
+// enum为关键字，作用为定义一种枚举类型
+enum PhoneType {
+  MOBILE = 0;
+  HOME = 1;
+  WORK = 2;
+}
+
+message PhoneNumber {
+  string number = 1;
+  PhoneType type = 2;
+}
+
