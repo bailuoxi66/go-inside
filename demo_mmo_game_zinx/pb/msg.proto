@@ -1,0 +1,9 @@
+syntax = "proto3"; // 指定版本信息，不指定会报错
+
+// 新版的proto编译器都要求文件中标注编译后文件的存储位置
+// 即生成的.pb.go文件会存放在../pb中，并和该文件名保持一致
+// test.proto => test.pb.go
+option go_package = "../pb";
+
+// 给C#提供的选项
+option csharp_namespace="Pb";
