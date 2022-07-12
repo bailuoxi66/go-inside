@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"github.com/bailuoxi66/go-inside/demo-zinx/ziface"
+	"github.com/bailuoxi66/go-inside/demo_mmo_game_zinx/pb"
 	"github.com/golang/protobuf/proto"
 	"math/rand"
 	"sync"
@@ -63,4 +64,35 @@ func (p *Player) SendMsg(msgId uint32, data proto.Message) {
 	}
 
 	return
+}
+
+// SyncPid 告知客户端玩家Pid，同步已经生成的玩家ID给客户端
+func (p *Player) SyncPid() {
+	// 组件MsgID：1 的proto数据
+	proto_msg := &pb.SyncPid{
+		Pid: p.Pid,
+	}
+
+	// 将消息发送给客户端
+	p.SendMsg(1, proto_msg)
+}
+
+// BroadCastStartPosition 告知客户端玩家Pid，同步已经生成的玩家ID给客户端
+func (p *Player) BroadCastStartPosition() {
+	// 组件MsgID：200 的proto数据
+	proto_msg := &pb.BroadCast{
+		Pid: p.Pid,
+		Tp:  2,
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: p.X,
+				Y: p.Y,
+				Z: p.Z,
+				V: p.V,
+			},
+		},
+	}
+
+	// 将消息发送给客户端
+	p.SendMsg(200, proto_msg)
 }
