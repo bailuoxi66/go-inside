@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bailuoxi66/go-inside/demo-zinx/ziface"
 	"github.com/bailuoxi66/go-inside/demo-zinx/znet"
+	"github.com/bailuoxi66/go-inside/demo_mmo_game_zinx/apis"
 	"github.com/bailuoxi66/go-inside/demo_mmo_game_zinx/core"
 )
 
@@ -19,6 +20,9 @@ func OnConnectionAdd(conn ziface.IConnection) {
 	// 将当前新上线的玩家添加到WorldManager中
 	core.WorldMgrObj.AddPlayer(player)
 
+	// 将该链接绑定一个Pid，玩家ID的属性
+	conn.SetProperty("pid", player.Pid)
+
 	fmt.Println("=========> player pid = ", player.Pid, " is arrived<========")
 }
 
@@ -28,7 +32,10 @@ func main() {
 
 	// 连接创建和销毁的HOOK钩子函数
 	s.SetOnConnStart(OnConnectionAdd)
+
 	// 注册一些路由业务
+	s.AddRouter(2, &apis.WorldChatApi{})
+
 	// 启动服务
 	s.Server()
 }

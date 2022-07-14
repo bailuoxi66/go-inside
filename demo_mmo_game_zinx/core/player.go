@@ -96,3 +96,8 @@ func (p *Player) BroadCastStartPosition() {
 	// 将消息发送给客户端
 	p.SendMsg(200, proto_msg)
 }
+
+// Talk 玩家广播世界聊天消息
+func (p *Player) Talk(content string) {
+
+}
