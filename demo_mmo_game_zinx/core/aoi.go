@@ -4,12 +4,12 @@ import "fmt"
 
 // 定义一些AOI的边界值
 const (
-	AOI_MIN_X  int = 85
-	AOI_MAX_X  int = 410
-	AOI_CNTS_X int = 10
-	AOI_MIN_Y  int = 75
-	AOI_MAX_Y  int = 400
-	AOI_CNTS_Y int = 20
+	AOI_MIN_X  int = 0
+	AOI_MAX_X  int = 300
+	AOI_CNTS_X int = 50
+	AOI_MIN_Y  int = 0
+	AOI_MAX_Y  int = 300
+	AOI_CNTS_Y int = 50
 )
 
 // AOIManager AOI区域管理模块
@@ -126,8 +126,12 @@ func (m *AOIManager) GetSurroundGridsByGid(gID int) (grids []*Grid) {
 
 // GetGidByPos 通过x、y横纵坐标得到当前GID格子编号
 func (m *AOIManager) GetGidByPos(x, y float32) int {
+	fmt.Println(x)
+	fmt.Println(y)
 	idx := (int(x) - m.MinX) / m.gridLength()
 	idy := (int(y) - m.MinY) / m.gridWidth()
+	fmt.Println(idx)
+	fmt.Println(idy)
 
 	return idy*m.CntsX + idx
 }
@@ -167,6 +171,9 @@ func (m *AOIManager) AddToGridByPos(pID int, x, y float32) {
 	gID := m.GetGidByPos(x, y)
 	grid := m.grids[gID]
 
+	fmt.Println("llll")
+	fmt.Println(gID)
+	fmt.Println(grid)
 	grid.Add(pID)
 }
 

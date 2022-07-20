@@ -25,6 +25,7 @@ type Grid struct {
 
 // NewGrid 初始化当前的格子的方法
 func NewGrid(gID, minX, maxX, minY, maxY int) *Grid {
+	fmt.Println("start NewGrid")
 	return &Grid{
 		GID:       gID,
 		MinX:      minX,
@@ -37,6 +38,8 @@ func NewGrid(gID, minX, maxX, minY, maxY int) *Grid {
 
 // Add 格子中添加一个玩家
 func (g *Grid) Add(playerID int) {
+	fmt.Println(playerID)
+	fmt.Println(g)
 	g.pIDLock.Lock()
 	defer g.pIDLock.Unlock()
 
