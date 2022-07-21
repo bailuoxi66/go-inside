@@ -117,3 +117,46 @@ func (p *Player) Talk(content string) {
 		player.SendMsg(200, proto_msg)
 	}
 }
+
+// SyncSurrounding 同步玩家上线的位置消息
+func (p *Player) SyncSurrounding() {
+	// 1. 获取当前玩家周围有哪些（九宫格）
+	pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
+	fmt.Println("444:", pids)
+	fmt.Println("4444:", WorldMgrObj.AoiMgr.GetGidByPos(p.X, p.Z))
+
+	gId := WorldMgrObj.AoiMgr.GetGidByPos(p.X, p.Z)
+
+	pp := WorldMgrObj.AoiMgr.GetPidsByGid(gId)
+	fmt.Println("pp:", pp)
+
+	players := make([]*Player, 0, len(pids))
+
+	for _, pid := range pids {
+		if P := WorldMgrObj.GetPlayerByPid(int32(pid)); P != nil {
+			players = append(players, P)
+		}
+	}
+	fmt.Println("555:", players)
+
+	// 2. 将当前玩家的位置信息通过MsgID:200 发送给周围的玩家（让其他玩家看到自己）
+	// 2.1 组件MsgID：200 proto数据
+	proto_msg := &pb.BroadCast{
+		Pid: p.Pid,
+		Tp:  2, //Tp2 代表广播坐标
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: p.X,
+				Y: p.Y,
+				Z: p.Z,
+				V: p.V,
+			},
+		},
+	}
+	// 2.2 全部周围的玩家都向格子的客户端发送200消息，proto_msg
+	for _, player := range players {
+		fmt.Println("..............")
+		fmt.Println(player)
+		player.SendMsg(200, proto_msg)
+	}
+}

@@ -12,6 +12,8 @@ import (
 func OnConnectionAdd(conn ziface.IConnection) {
 	// 创建一个Player对象
 	player := core.NewPlayer(conn)
+
+	fmt.Println("11:", player)
 	// 给客户端发送MsgID:1的消息，同步当前Player的ID给客户端
 	player.SyncPid()
 	// 给客户端发送MsgID:200的消息，同步当前Player的初始位置给客户端
@@ -19,6 +21,12 @@ func OnConnectionAdd(conn ziface.IConnection) {
 
 	// 将当前新上线的玩家添加到WorldManager中
 	core.WorldMgrObj.AddPlayer(player)
+
+	s := core.WorldMgrObj.GetAllPlayers()
+	fmt.Println("333:", s)
+
+	// 同步玩家上线的位置消息
+	player.SyncSurrounding()
 
 	// 将该链接绑定一个Pid，玩家ID的属性
 	conn.SetProperty("pid", player.Pid)

@@ -1,6 +1,9 @@
 package core
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // WorldManager 当前游戏的世界总管理模块
 type WorldManager struct {
@@ -32,7 +35,10 @@ func (wm *WorldManager) AddPlayer(player *Player) {
 	wm.pLock.Unlock()
 
 	// 将player添加到AOIManager中
-	wm.AoiMgr.AddToGridByPos(int(player.Pid), player.X, player.Y)
+	wm.AoiMgr.AddToGridByPos(int(player.Pid), player.X, player.Z)
+
+	s := wm.GetPlayerByPid(player.Pid)
+	fmt.Println("222:", s)
 }
 
 // RemovePlayer 删除一个玩家
@@ -41,7 +47,7 @@ func (wm *WorldManager) RemovePlayer(pid int32) {
 	// 得到当前玩家
 	player := wm.Players[pid]
 	// 将玩家从AOIManager中删除
-	wm.AoiMgr.RemoveFromGridByPos(int(pid), player.X, player.Y)
+	wm.AoiMgr.RemoveFromGridByPos(int(pid), player.X, player.Z)
 
 	// 将玩家从世界管理中删除
 

@@ -5,11 +5,11 @@ import "fmt"
 // 定义一些AOI的边界值
 const (
 	AOI_MIN_X  int = 0
-	AOI_MAX_X  int = 300
-	AOI_CNTS_X int = 50
+	AOI_MAX_X  int = 250
+	AOI_CNTS_X int = 5
 	AOI_MIN_Y  int = 0
-	AOI_MAX_Y  int = 300
-	AOI_CNTS_Y int = 50
+	AOI_MAX_Y  int = 250
+	AOI_CNTS_Y int = 5
 )
 
 // AOIManager AOI区域管理模块
@@ -144,7 +144,7 @@ func (m *AOIManager) GetPidsByPos(x, y float32) (playerIDs []int) {
 	grids := m.GetSurroundGridsByGid(gID)
 	//将九宫格信息放置到playerIDs
 	for _, v := range grids {
-		playerIDs = append(playerIDs, v.GID)
+		playerIDs = append(playerIDs, m.GetPidsByGid(v.GID)...)
 	}
 
 	return playerIDs
@@ -162,6 +162,7 @@ func (m *AOIManager) RemovePidToGrid(pID, gID int) {
 
 //通过gID获取全部的PlayerID
 func (m *AOIManager) GetPidsByGid(gID int) (playerIDs []int) {
+	fmt.Println("gID:", gID)
 	playerIDs = m.grids[gID].GetPlayerIDs()
 	return
 }
@@ -171,7 +172,6 @@ func (m *AOIManager) AddToGridByPos(pID int, x, y float32) {
 	gID := m.GetGidByPos(x, y)
 	grid := m.grids[gID]
 
-	fmt.Println("llll")
 	fmt.Println(gID)
 	fmt.Println(grid)
 	grid.Add(pID)
