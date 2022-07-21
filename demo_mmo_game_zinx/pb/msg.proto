@@ -36,3 +36,14 @@ message BroadCast{
 message Talk{
   string Content=1;
 }
+
+// 同步玩家的显示数据
+message SyncPlayers{
+  repeated Player ps = 1;
+}
+
+// 玩家信息
+message Player{
+  int32 Pid = 1;
+  Position P = 2;
+}
