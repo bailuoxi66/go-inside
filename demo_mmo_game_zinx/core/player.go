@@ -159,4 +159,31 @@ func (p *Player) SyncSurrounding() {
 		fmt.Println(player)
 		player.SendMsg(200, proto_msg)
 	}
+
+	// 3 将周围的全部玩家的位置信息发送给当前的玩家MsgID：202 客户端（让自己看到其他玩家）
+	// 3.1 组建MsgID：202 proto数据
+	// 3.1.1 制作pb.Player slice
+	players_proto_msg := make([]*pb.Player, 0, len(players))
+	for _, player := range players {
+		// 制作一个message Player
+		p := &pb.Player{
+			Pid: player.Pid,
+			P: &pb.Position{
+				X: player.X,
+				Y: player.Y,
+				Z: player.Z,
+				V: player.V,
+			},
+		}
+
+		players_proto_msg = append(players_proto_msg, p)
+	}
+
+	// 3.1.2 封装SyncPlayer protobuf数据
+	SyncPlayers_proto_msg := &pb.SyncPlayers{
+		Ps: players_proto_msg[:],
+	}
+
+	// 3.2 将组件好的数据发送给当前玩家的客户端
+	p.SendMsg(202, SyncPlayers_proto_msg)
 }
