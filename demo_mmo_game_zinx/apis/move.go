@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bailuoxi66/go-inside/demo-zinx/ziface"
 	"github.com/bailuoxi66/go-inside/demo-zinx/znet"
+	"github.com/bailuoxi66/go-inside/demo_mmo_game_zinx/core"
 	"github.com/bailuoxi66/go-inside/demo_mmo_game_zinx/pb"
 	"github.com/golang/protobuf/proto"
 )
@@ -29,7 +30,11 @@ func (m *MoveApi) Handle(request ziface.IRequest) {
 		return
 	}
 
-	fmt.Println("Player pid=%d, move(%f, %f, %f, %f)\n", pid, proto_msg.X, proto_msg.Y, proto_msg.Z, proto_msg.V)
+	fmt.Printf("Player pid=%d, move(%f, %f, %f, %f)\n", pid, proto_msg.X, proto_msg.Y, proto_msg.Z, proto_msg.V)
+
+	// 获取当前玩家
+	player := core.WorldMgrObj.GetPlayerByPid(pid.(int32))
 
 	// 给其他玩家进行当前玩家的位置信息广播
+	player.UpdatePos(proto_msg.X, proto_msg.Y, proto_msg.Z, proto_msg.V)
 }

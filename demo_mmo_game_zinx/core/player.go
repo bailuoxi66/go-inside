@@ -187,3 +187,44 @@ func (p *Player) SyncSurrounding() {
 	// 3.2 将组件好的数据发送给当前玩家的客户端
 	p.SendMsg(202, SyncPlayers_proto_msg)
 }
+
+func (p *Player) UpdatePos(x float32, y float32, z float32, v float32) {
+	// 更新当前玩家坐标
+	p.X = x
+	p.Y = y
+	p.Z = z
+	p.V = v
+
+	// 组建广播proto协议 MsgID：200 Tp-4
+	proto_msg := &pb.BroadCast{
+		Pid: p.Pid,
+		Tp:  4, //4 - 移动之后的坐标信息
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: p.X,
+				Y: p.Y,
+				Z: p.Z,
+				V: p.V,
+			},
+		},
+	}
+
+	// 获取当前玩家的周边玩家AOI九宫格之内的玩家
+	players := p.GetSuroundingPlayers()
+	// 一次给每个玩家对应的客户端发送当前玩家位置更新的消息
+	for _, player := range players {
+		player.SendMsg(200, proto_msg)
+	}
+}
+
+func (p *Player) GetSuroundingPlayers() []*Player {
+	// 得到当前AOI九宫格内的所有玩家PID
+	pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
+
+	// 将所有的pid对应的Player放到Players切片中
+	players := make([]*Player, 0, len(pids))
+	for _, pid := range pids {
+		players = append(players, WorldMgrObj.GetPlayerByPid(int32(pid)))
+	}
+	return players
+}
