@@ -188,6 +188,7 @@ func (p *Player) SyncSurrounding() {
 	p.SendMsg(202, SyncPlayers_proto_msg)
 }
 
+// UpdatePos 更新玩家位置
 func (p *Player) UpdatePos(x float32, y float32, z float32, v float32) {
 	// 更新当前玩家坐标
 	p.X = x
@@ -217,6 +218,7 @@ func (p *Player) UpdatePos(x float32, y float32, z float32, v float32) {
 	}
 }
 
+// GetSuroundingPlayers 获取当前玩家周围的所有玩家
 func (p *Player) GetSuroundingPlayers() []*Player {
 	// 得到当前AOI九宫格内的所有玩家PID
 	pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
@@ -227,4 +229,22 @@ func (p *Player) GetSuroundingPlayers() []*Player {
 		players = append(players, WorldMgrObj.GetPlayerByPid(int32(pid)))
 	}
 	return players
+}
+
+// Offline 玩家下线
+func (p *Player) Offline() {
+	// 得到当前玩家周边的九宫格内的所有玩家
+	players := p.GetSuroundingPlayers()
+
+	// 给周围玩家广播MsgID：201消息
+	proto_msg := &pb.SyncPid{
+		Pid: p.Pid,
+	}
+
+	for _, player := range players {
+		player.SendMsg(201, proto_msg)
+	}
+
+	WorldMgrObj.AoiMgr.RemoveFromGridByPos(int(p.Pid), p.X, p.Z)
+	WorldMgrObj.RemovePlayer(p.Pid)
 }
